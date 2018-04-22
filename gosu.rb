@@ -16,6 +16,8 @@ class Tutorial < Gosu::Window
 
     @star_anim = Gosu::Image.load_tiles('star.png', 25, 25)
     @stars = Array.new
+
+    @font = Gosu::Font.new(20)
   end
 
   def update
@@ -40,6 +42,7 @@ class Tutorial < Gosu::Window
     @background_image.draw(0, 0, ZOrder::BACKGROUND)
     @player.draw
     @stars.each { |star| star.draw }
+    @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, Gosu::Color::YELLOW)
   end
 
   def button_down(id)
@@ -52,8 +55,11 @@ class Tutorial < Gosu::Window
 end
 
 class Player
+  attr_reader :score
+
   def initialize
     @image = Gosu::Image.new('starfighter.bmp')
+    @beep = Gosu::Sample.new('beep.wav')
     @x = @y = @vel_x = @vel_y = @angle = 0.0
     @score = 0
   end
@@ -94,7 +100,15 @@ class Player
   end
 
   def collect_stars(stars)
-    stars.reject! { |star| Gosu.distance(@x, @y, star.x, star.y) < 35 }
+    stars.reject! do |star|
+      if Gosu.distance(@x, @y, star.x, star.y) < 35
+        @score += 10
+        @beep.play
+        true
+      else
+        false
+      end
+    end
   end
 end
 
