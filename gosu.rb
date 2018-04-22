@@ -4,6 +4,8 @@ class Tutorial < Gosu::Window
   def initialize
     super 640, 480
     self.caption = "Tutorial Game"
+
+    @background_image = Gosu::Image.new('space.png')
   end
 
   def update
@@ -11,6 +13,9 @@ class Tutorial < Gosu::Window
   end
 
   def draw
+    @background_image.draw(0, 0, 0)
     # ...
   end
 end
+
+Tutorial.new.show
