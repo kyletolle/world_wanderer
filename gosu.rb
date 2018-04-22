@@ -9,10 +9,13 @@ class Tutorial < Gosu::Window
     super 640, 480
     self.caption = "Tutorial Game"
 
-    @background_image = Gosu::Image.new('space.png')
+    @background_image = Gosu::Image.new('space.png', tileable: true)
 
     @player = Player.new
     @player.warp(320, 240)
+
+    @star_anim = Gosu::Image.load_tiles('star.png', 25, 25)
+    @stars = Array.new
   end
 
   def update
@@ -26,11 +29,17 @@ class Tutorial < Gosu::Window
       @player.accelerate
     end
     @player.move
+    @player.collect_stars(@stars)
+
+    if rand(100) < 4 and @stars.size < 25
+      @stars.push(Star.new(@star_anim))
+    end
   end
 
   def draw
+    @background_image.draw(0, 0, ZOrder::BACKGROUND)
     @player.draw
-    @background_image.draw(0, 0, 0)
+    @stars.each { |star| star.draw }
   end
 
   def button_down(id)
@@ -105,7 +114,7 @@ class Star
   def draw
     img = @animation[Gosu.milliseconds / 100 % @animation.size]
     img.draw(@x - img.width / 2.0, @y - img.height / 2.0,
-             Zorder::STARS, 1, 1, @color, :add)
+             ZOrder::STARS, 1, 1, @color, :add)
   end
 end
 
