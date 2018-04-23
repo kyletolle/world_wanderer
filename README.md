@@ -18,6 +18,10 @@ ruby gosu.rb
 
 To quit, close the GUI window, or hit `ESC`.
 
+## Asset Credits
+
+Using grass from https://opengameart.org/content/seamless-grass-texture-ii
+
 ## License
 
 MIT

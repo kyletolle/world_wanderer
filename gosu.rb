@@ -4,12 +4,19 @@ module ZOrder
   BACKGROUND, STARS, PLAYER, UI = *0..3
 end
 
+module GameWindow
+  WIDTH, HEIGHT = 1024, 1024
+end
+
+puts "Width: #{GameWindow::WIDTH}"
+puts "Height: #{GameWindow::HEIGHT}"
+
 class Tutorial < Gosu::Window
   def initialize
-    super 640, 480
+    super GameWindow::WIDTH, GameWindow::HEIGHT
     self.caption = "Tutorial Game"
 
-    @background_image = Gosu::Image.new('space.png', tileable: true)
+    @background_image = Gosu::Image.new('grass.png', tileable: true)
 
     @player = Player.new
     @player.warp(320, 240)
@@ -40,6 +47,9 @@ class Tutorial < Gosu::Window
 
   def draw
     @background_image.draw(0, 0, ZOrder::BACKGROUND)
+    @background_image.draw(GameWindow::WIDTH/2, 0, ZOrder::BACKGROUND)
+    @background_image.draw(0, GameWindow::HEIGHT/2, ZOrder::BACKGROUND)
+    @background_image.draw(GameWindow::WIDTH/2, GameWindow::HEIGHT/2, ZOrder::BACKGROUND)
     @player.draw
     @stars.each { |star| star.draw }
     @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, Gosu::Color::YELLOW)
@@ -84,8 +94,8 @@ class Player
   def move
     @x += @vel_x
     @y += @vel_y
-    @x %= 640
-    @y %= 480
+    @x %= GameWindow::WIDTH
+    @y %= GameWindow::HEIGHT
 
     @vel_x *= 0.95
     @vel_y *= 0.95
@@ -121,8 +131,8 @@ class Star
     @color.red = rand(256 - 40) + 40
     @color.green = rand(256 - 40) + 40
     @color.blue = rand(256 - 40) + 40
-    @x = rand * 640
-    @y = rand * 480
+    @x = rand * GameWindow::WIDTH
+    @y = rand * GameWindow::HEIGHT
   end
 
   def draw
